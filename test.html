@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<head>
+    <style>
+    .card {
+        float: left;
+        border: solid #000;
+        background-color: white;
+    }
+
+    </style>
+</head>
+<body>
+<script>
+const students = [
+    {
+    name: 'Martin',
+    lastName: 'Lant',
+    marks: [9, 8, null, 7, 5],
+    },
+    {
+    name: 'Francesco',
+    lastName: 'Portus',
+    marks: [5, 4, 2, 3, 2],
+    },
+    {
+    name: 'Bill',
+    lastName: 'Merdoc',
+    marks: [10, null, null, null, 10],
+    },
+    {
+    name: 'John',
+    lastName: 'Entman',
+    marks: [9, 8, 9, 7, 5],
+    },
+];
+
+
+for (i=0; i<students.length; i++){
+    document.write("<div class='card' id='card"+i+"' > "); //There's propably a better way to do it..
+    document.write("Name: " + students[i].name + "<br>");
+    document.write("Last Name: " + students[i].lastName + "<br>");
+    x = 0;
+    y = 0;
+    for (j=0; j<students[i].marks.length; j++){
+        if(students[i].marks[j] != null) {
+            x++
+            y += students[i].marks[j];
+        }
+    }
+    document.write("lectures visited: " + x + "<br>");
+    document.write("Avarage mark: " + y/5 + "<br>");
+    if ((y/5) < 5) {
+        document.getElementById("card"+i).style.borderColor = "red"; 
+    } else {
+        document.getElementById("card"+i).style.borderColor = "green";
+    }
+    document.write("</div>");
+    
+}
+
+const card0 = document.getElementById('card0');
+const card1 = document.getElementById('card1');
+const card2 = document.getElementById('card2');
+const card3 = document.getElementById('card3');
+
+card0.addEventListener('click', function onClick(event) {
+  document.getElementById("card0").style.backgroundColor = 'gray';
+  document.getElementById("card1").style.backgroundColor = 'white';
+  document.getElementById("card2").style.backgroundColor = 'white';
+  document.getElementById("card3").style.backgroundColor = 'white';
+});
+
+card1.addEventListener('click', function onClick(event) {
+  document.getElementById("card0").style.backgroundColor = 'white';
+  document.getElementById("card1").style.backgroundColor = 'grey';
+  document.getElementById("card2").style.backgroundColor = 'white';
+  document.getElementById("card3").style.backgroundColor = 'white';
+});
+card2.addEventListener('click', function onClick(event) {
+  document.getElementById("card0").style.backgroundColor = 'white';
+  document.getElementById("card1").style.backgroundColor = 'white';
+  document.getElementById("card2").style.backgroundColor = 'grey';
+  document.getElementById("card3").style.backgroundColor = 'white';
+});
+card3.addEventListener('click', function onClick(event) {
+  document.getElementById("card0").style.backgroundColor = 'white';
+  document.getElementById("card1").style.backgroundColor = 'white';
+  document.getElementById("card2").style.backgroundColor = 'white';
+  document.getElementById("card3").style.backgroundColor = 'grey';
+});
+
+</script>
+
+</body>
