@@ -1,0 +1,49 @@
+* {
+    font-family:sans-serif;
+}
+
+#newTaskForm {
+    border: 5px dotted lightskyblue;
+    border-radius: 10px;
+    
+}
+
+#newTaskForm input {
+    margin-bottom: 10px;
+}
+
+.task-title {
+    font-size: 20px;
+    font-weight: 700;
+    color:blueviolet;
+}
+
+.task-body{
+    font-style: italic;
+    color: brown;
+}
+
+.task {
+    border: 2px solid pink;
+    padding: 10px;
+}
+
+.task .text {
+    display: flex;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.task .body {
+    min-height: 40px;
+    background-color: antiquewhite;
+}
+
+.edit {
+    background-color: greenyellow;
+    margin-right: 20px;
+}
+
+.delete {
+    background-color: red;
+}
