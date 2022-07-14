@@ -10,12 +10,19 @@ function App() {
   const [tasks, setTasks] = useState([]);
   const endpoint = "http://localhost:3000/tasks";
 
-  useEffect(() => {
+  const [showEdit, setShowEdit] = useState(-1);
+  const [updated, setUpdate] = useState(initialToDo);
+ 
+  function getTasks() {
     axios.get(endpoint).then((r) => {
       setTasks(r.data);
     });
-  }, []);
-  
+  }
+
+  useEffect(() => {
+    getTasks();
+  },[]);
+
   function createTask(e) {
     e.preventDefault();
     if (!state) {
@@ -29,28 +36,24 @@ function App() {
       body: state.body,
     };
     axios.post(endpoint, task);
-    axios.get(endpoint).then((r) => {
-      console.log(r)
-      setTasks(r.data);
-    })
-    // setTasks(oldlist => [...oldlist, task]);
+    getTasks();
     setState(initialToDo);
-
   }
 
   function deleteTask(id) {
     const taskToDel = endpoint + `/${id}`;
     axios.delete(taskToDel);
-
-    axios.get(endpoint).then((r) => {
-      setTasks(r.data);
-    });
+    getTasks();
   }
 
-  function editTask(id,) {
-    const curentTask = tasks.filter(task => task.id == id);
-
-
+  function editTask(id, t, b) {
+    const taskToEdit = endpoint + `/${id}`;
+    axios.put(taskToEdit, {
+      title: t,
+      body: b
+    });
+    getTasks();
+    setUpdate(initialToDo);
   }
 
   return (
@@ -75,8 +78,16 @@ function App() {
             <div key={task.id}>
               <b>Title: </b> {task.title} <br />
               Body: {task.body} <br />
-              <button onClick={() => editTask(task.id)}>Edit</button>
+              <button onClick={() => setShowEdit(task.id)}>Edit</button>
               <button onClick={() => deleteTask(task.id)}>Delete</button>
+
+              {showEdit === task.id ? (
+                <div>
+                  new title:<input type="text" value={updated.title} onChange={(e) => setUpdate({ ...updated, title: e.target.value })} />
+                  new body:<input type="text" value={updated.body} onChange={(e) => setUpdate({ ...updated, body: e.target.value })} />
+                  <button onClick={() => editTask(task.id, updated.title, updated.body)}>Update</button>
+                </div>
+              ) : null}
 
             </div>
           )
