@@ -35,15 +35,13 @@ function App() {
       title: state.title,
       body: state.body,
     };
-    axios.post(endpoint, task);
-    getTasks();
+    axios.post(endpoint, task).then(getTasks);
     setState(initialToDo);
   }
 
   function deleteTask(id) {
     const taskToDel = endpoint + `/${id}`;
-    axios.delete(taskToDel);
-    getTasks();
+    axios.delete(taskToDel).then(getTasks);
   }
 
   function editTask(id, t, b) {
@@ -51,8 +49,8 @@ function App() {
     axios.put(taskToEdit, {
       title: t,
       body: b
-    });
-    getTasks();
+    }).then(getTasks);
+    
     setUpdate(initialToDo);
   }
 
