@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import './App.css';
+import getTasks from './components/getTasks(endpoint)';
 
 
 function App() {
@@ -13,14 +14,14 @@ function App() {
   const [showEdit, setShowEdit] = useState(-1);
   const [updated, setUpdate] = useState(initialToDo);
  
-  function getTasks() {
-    axios.get(endpoint).then((r) => {
-      setTasks(r.data);
-    });
-  }
+  // function getTasks(endpoint)() {
+  //   axios.get(endpoint).then((r) => {
+  //     setTasks(r.data);
+  //   });
+  // }
 
   useEffect(() => {
-    getTasks();
+    getTasks(endpoint)();
   },[]);
 
   function createTask(e) {
@@ -35,13 +36,13 @@ function App() {
       title: state.title,
       body: state.body,
     };
-    axios.post(endpoint, task).then(getTasks);
+    axios.post(endpoint, task).then(getTasks(endpoint));
     setState(initialToDo);
   }
 
   function deleteTask(id) {
     const taskToDel = endpoint + `/${id}`;
-    axios.delete(taskToDel).then(getTasks);
+    axios.delete(taskToDel).then(getTasks(endpoint));
   }
 
   function editTask(id, t, b) {
@@ -49,7 +50,7 @@ function App() {
     axios.put(taskToEdit, {
       title: t,
       body: b
-    }).then(getTasks);
+    }).then(getTasks(endpoint));
     
     setUpdate(initialToDo);
   }
