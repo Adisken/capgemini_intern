@@ -16,19 +16,34 @@ function App() {
   useEffect(() => {
     axios.get(endpoint).then((r) => {
       setTodos(r.data);
+      
     });
   }, [todos]);
 
   const createTodo = (c: React.FormEvent) => {
     c.preventDefault();
     if (todo) {
-      axios.post(endpoint, todo);
+      todo.id = Date.now();
+      axios.post(endpoint, todo).catch((error) => {
+        console.log(error);
+      });
       setTodo(initialTodo);
     }
   };
 
+  
+//   function editTodo({id, title, body}:Task) {
+//     const taskToEdit = endpoint + `/${id}`;
+//     console.log(taskToEdit);
+//     axios.put(taskToEdit, {
+//       title: title,
+//       body: body,
+//     })
+//  }
+
   function deleteTodo(id: number) {
     const taskToDel = endpoint + `/${id}`;
+    console.log(taskToDel);
     axios.delete(taskToDel);
   }
 
@@ -59,6 +74,7 @@ function App() {
                 todos={todos}
                 setTodos={setTodos}
                 deleteTodo={deleteTodo}
+               
               />
             </>
           }
