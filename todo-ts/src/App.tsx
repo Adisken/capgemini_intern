@@ -1,88 +1,57 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import "./App.css";
 import Inputform from "./components/inputform";
 import TodoList from "./components/TodoList";
 import { endpoint, initialTodo } from "./consts/consts";
-import { Task } from "./interfaces/Interfaces";
-import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+import { Link, Route, Routes } from "react-router-dom";
 import Dashboard from "./components/dashboard";
 import Catpic from "./components/Catpic";
+import { Context, defaultRole } from "./context";
+import Header from "./components/header/Header";
+import { reducer } from "./store/reducer";
+import { initialState } from "./store/state";
+import { Task } from "./store/types";
 
 function App() {
-  const [todo, setTodo] = useState<Task>(initialTodo);
-  const [todos, setTodos] = useState<Array<Task>>([]);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     axios.get(endpoint).then((r) => {
-      setTodos(r.data);
-      
+      dispatch({ type: "get-todos", payload: r.data });
     });
-  }, [todos]);
+  }, []);
 
-  const createTodo = (c: React.FormEvent) => {
-    c.preventDefault();
-    if (todo) {
-      todo.id = Date.now();
-      axios.post(endpoint, todo).catch((error) => {
-        console.log(error);
-      });
-      setTodo(initialTodo);
-    }
-  };
-
-  
-//   function editTodo({id, title, body}:Task) {
-//     const taskToEdit = endpoint + `/${id}`;
-//     console.log(taskToEdit);
-//     axios.put(taskToEdit, {
-//       title: title,
-//       body: body,
-//     })
-//  }
-
-  function deleteTodo(id: number) {
-    const taskToDel = endpoint + `/${id}`;
-    console.log(taskToDel);
-    axios.delete(taskToDel);
-  }
+  // const createTodo = (c: React.FormEvent) => {
+  //   c.preventDefault();
+  //   if (todo) {
+  //     todo.id = Date.now();
+  //     axios.post(endpoint, todo).catch((error) => {
+  //       console.log(error);
+  //     });
+  //     setTodo(initialTodo);
+  //   }
+  // };
 
   return (
-    <div className="App">
-      <div className="menu">
-        <Link to="/">dashboard</Link>
+    <Context.Provider value={{ state, dispatch }}>
+      <div className="App">
+        <Header />
+        <Routes>
+          <Route path="/" element={<Dashboard />}></Route>
+          <Route
+            path="/todo"
+            element={
+              <>
+                <Inputform />
+                <TodoList />
+              </>
+            }
+          />
+          <Route path="/catpic" element={<Catpic />}></Route>
+        </Routes>
       </div>
-      <div className="menu">
-        <Link to="/todo">Todos</Link>
-      </div>
-      <div className="menu">
-        <Link to="/catpic">cat picture</Link>
-      </div>
-
-      <Routes>
-        <Route path="/" element={<Dashboard />}></Route>
-        <Route
-          path="/todo"
-          element={
-            <>
-              <Inputform
-                todo={todo}
-                setTodo={setTodo}
-                createTodo={createTodo}
-              />
-              <TodoList
-                todos={todos}
-                setTodos={setTodos}
-                deleteTodo={deleteTodo}
-               
-              />
-            </>
-          }
-        />
-
-        <Route path="/catpic" element={<Catpic />}></Route>
-      </Routes>
-    </div>
+    </Context.Provider>
   );
 }
 

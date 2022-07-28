@@ -1,22 +1,39 @@
-import React from 'react'
-import { Task } from '../interfaces/Interfaces';
+import React, { useContext, useState } from "react";
+import { initialTodo } from "../consts/consts";
+import { Context } from "../context";
+import { Task } from "../store/types";
 
+const Inputform = () => {
+  const { state, dispatch } = useContext(Context);
+  const [todo, setTodo] = useState<Task>(initialTodo);
 
-
-interface Props {
-  todo: Task,
-  setTodo: React.Dispatch<React.SetStateAction<Task>>,
-  createTodo: (e: React.FormEvent) => void;
-}
-
-const Inputform = ({ todo, setTodo, createTodo }: Props) => {
   return (
-    <form onSubmit={createTodo}>
-      <input type="input" value={todo.title} onChange={(e) => setTodo({...todo, title: e.target.value})} placeholder='Enter Title'></input>
-      <input type="input" value={todo.body} onChange={(e) => setTodo({...todo, body: e.target.value})} placeholder='Enter Body'></input>
-      <button type="submit" >Add Task</button>
+    <form>
+      <input
+        type="input"
+        value={todo.title}
+        onChange={(e) => setTodo({ ...todo, title: e.target.value })}
+        placeholder="Enter Title"
+      ></input>
+      <input
+        type="input"
+        value={todo.body}
+        onChange={(e) => setTodo({ ...todo, body: e.target.value })}
+        placeholder="Enter Body"
+      ></input>
+      <button
+        onClick={() => {
+          todo.id = Date.now();
+          console.log('!!1',state.todos)
+          dispatch({ type: 'create-todo', payload: todo });
+          console.log('!!2',state.todos)
+          setTodo(initialTodo);
+        }}
+      >
+        Add Task
+      </button>
     </form>
-  )
-}
+  );
+};
 
 export default Inputform;

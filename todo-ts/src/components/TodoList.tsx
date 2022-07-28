@@ -1,17 +1,15 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { endpoint, initialTodo } from "../consts/consts";
-import { Task } from "../interfaces/Interfaces";
+import { Context } from "../context";
+import { Task } from "../store/types";
 
-interface Props {
-  todos: Array<Task>;
-  setTodos: React.Dispatch<React.SetStateAction<Task[]>>;
-  deleteTodo: any; //used any cos' idk what else I could put here :/
-}
 
-const TodoList: React.FC<Props> = ({ todos, setTodos, deleteTodo}) => {
-  const [showEdit, setShowEdit] = useState<number>();
+const TodoList: React.FC = () => {
+  const [showEdit, setShowEdit] = useState(-1);
   const [updated, setUpdate] = useState(initialTodo);
+
+  const { state, dispatch } = useContext(Context);
 
   const editTodo = (u: React.FormEvent) => {
     u.preventDefault();
@@ -27,17 +25,18 @@ const TodoList: React.FC<Props> = ({ todos, setTodos, deleteTodo}) => {
 
   return (
     <div>
-      {todos.map((todo) => (
+      {state.todos && state.todos.map((todo) => (
         <div>
           <li>
             title: {todo.title} body: {todo.body}
             <span> </span>
-            <button onClick={() => setShowEdit(todo.id)}>Edit</button>
-            <button onClick={() => deleteTodo(todo.id)}>❌</button>
+            
+            {state.role === 'admin' ? <button onClick={() => setShowEdit(todo.id)}>Edit</button> : ("")}
+            {state.role === 'admin' ? <button onClick={() => dispatch({type: 'delete-todo', payload: todo.id})}>❌</button> : ("")}
+            
           </li>
 
           {showEdit === todo.id ? (
-            
               <div>
                 <form onSubmit={editTodo}>
                 new title:
@@ -57,7 +56,7 @@ const TodoList: React.FC<Props> = ({ todos, setTodos, deleteTodo}) => {
                   }
                 />
                 <button
-                  type="submit" onClick={() => (setUpdate({...updated, id : todo.id}))} 
+                   onClick={() => {setUpdate({...updated, id : todo.id})}} 
                 >
                   Update
                 </button>

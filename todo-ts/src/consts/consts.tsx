@@ -1,4 +1,5 @@
-import { Task } from "../interfaces/Interfaces";
+import { Task } from "../store/types";
+
 
 const initialTodo : Task = {
     id: 123,
